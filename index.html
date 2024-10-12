@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Responsive Sidebar</title>
+    <title>Pembuat Catatan</title>
+    <link rel="shortcut icon" href="./assets/icon/bi--journals.svg" type="image/x-icon">
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
@@ -14,54 +15,72 @@
 </head>
 
 <body class="bg-dark">
-    <nav class="navbar navbar-dark bg-dark px-3 d-flex justify-content-between align-items-center">
-        <div class="d-flex align-items-center">
-            <button id="toggleSidebar" class="btn btn-outline-light" style="outline: none;">
-                <i id="toggleIcon" class="bi bi-list"></i> <!-- Hamburger icon -->
-            </button>
-            <a href="#" class="navbar-brand d-flex align-items-center ms-3">
-                <img src="./assets/icon/pixelarticons--notes-plus.svg" alt="Logo" width="30" height="30" class="d-inline-block align-text-top ms-2">
-                <span class="d-sm-inline ms-2">Pencatatan</span>
-            </a>
-        </div>
-
-        <!-- Search Bar and Dropdown -->
-        <div class="d-flex align-items-center">
-            <!-- Search Bar -->
-            <form class="d-flex me-3">
-                <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-            </form>
-            <!-- Dropdown Menu -->
-            <div class="dropdown">
-                <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    User
+    <nav class="navbar navbar-dark bg-dark sticky-top">
+        <div class="container-fluid">
+            <!-- Navbar Brand and Toggle Sidebar Button -->
+            <a href="#" class="navbar-brand d-flex align-items-center">
+                <button id="toggleSidebar" class="btn btn-outline-light ms-2">
+                    <i id="toggleIcon" class="bi bi-list"></i>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="#">Mode Gelap</a></li>
-                    <li><a class="dropdown-item" href="#">Mode Terang</a></li>
-                </ul>
-            </div>
+                <img src="./assets/icon/bi--journals.svg" alt="Logo" width="30" height="30"
+                    class="d-inline-block align-text-top ms-3">
+                <span class="d-sm-inline ms-2 fw-semibold"><i>Catatan</i></span>
+            </a>
+            <form id="navbarSearchForm" class="d-none d-md-flex">
+                <input type="search" class="form-control" placeholder="Cari catatan..." aria-label="Search">
+            </form>
+            <button id="toggleThemeDesktop" class="btn btn-outline-light d-none d-md-block ms-2">
+                <i class="bi bi-moon-stars"></i>
+            </button>
         </div>
     </nav>
+    <hr class="navbar-separator my-3">
 
     <!-- Sidebar -->
-    <div id="sidebar" class="sidebar bg-dark">
+    <div id="sidebar" class="sidebar bg-dark mt-5">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" href="#">
-                    <i class="bi bi-lightbulb"></i> <span class="ms-5">Catatan</span>
+                <a class="nav-link active text-light" href="#">
+                    <i class="bi bi-journals"></i><span class="ms-5">Catatan</span>
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="bi bi-archive"></i> <span class="ms-5">Arsipkan</span>
+                <a class="nav-link text-light" href="#">
+                    <i class="bi bi-archive"></i> <span class="ms-5">Arsip Catatan</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">
+            <li class="nav-item d-md-none">
+                <a class="nav-link text-light" href="#" data-bs-toggle="modal" data-bs-target="#searchModal">
+                    <i class="bi bi-search"></i> <span class="ms-5">Pencarian</span>
+                </a>
+            </li>
+            <li class="nav-item d-none d-md-block">
+                <a class="nav-link text-light" href="#">
                     <i class="bi bi-trash"></i> <span class="ms-5">Sampah</span>
                 </a>
+            </li>
+
+            <!-- New dropdown for mobile -->
+            <li class="nav-item d-md-none">
+                <a class="nav-link text-light" href="#" id="mobileMenuToggle" data-bs-toggle="collapse"
+                    data-bs-target="#mobileDropdownMenu" aria-expanded="false">
+                    <i class="bi bi-grid"></i> <span class="ms-5">Menu Lainnya</span>
+                </a>
+                <!-- Dropdown content -->
+                <div class="collapse" id="mobileDropdownMenu">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="#">
+                                <i class="bi bi-trash"></i> <span class="ms-5">Sampah</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-light" href="#" id="toggleTheme">
+                                <i class="bi bi-moon-stars"></i> <span class="ms-5">Mode Gelap</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
             </li>
         </ul>
     </div>
@@ -69,7 +88,8 @@
     <!-- Main Content -->
     <main id="main-content" class="flex-grow-1">
         <!-- Content goes here -->
-        <div class="container mt-4">
+        <div class="container">
+            <h2 class="text-light mb-4"><i>Semua Catatan</i></h2>
             <div class="row">
                 <div class="col-md-4 mb-3">
                     <div class="card shadow-sm">
@@ -104,6 +124,29 @@
             </div>
         </div>
     </main>
+
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="searchModalLabel">Search</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="search" class="form-control" placeholder="Type your keyword..."
+                            aria-label="Search">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Button for adding new note -->
+    <button id="addNoteButton" class="btn btn-primary rounded-circle">
+        <i class="bi bi-bookmark-plus"></i>
+    </button>
+
 
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
