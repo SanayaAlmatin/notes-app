@@ -1,4 +1,10 @@
-@import url("https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css");
+html {
+    scrollbar-width: none;
+}
+
+html::-webkit-scrollbar {
+    display: none;
+}
 
 /* Adjust the navbar and search/dropdown styles */
 .navbar {
@@ -134,7 +140,7 @@
 }
 
 .nav-link.active {
-    background-color: #5e4e2a;
+    background-color: #bd93f9;
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     margin-bottom: 10px;
@@ -142,7 +148,7 @@
 }
 
 .sidebar:not(.expanded) .nav-link.active {
-    background-color: #5e4e2a;
+    background-color: #bd93f9;
     border-radius: 50%;
     /* Make the active effect circular */
     width: 40px;
@@ -166,25 +172,16 @@
     /* Hover color for non-active menu items */
 }
 
-/* Notes Card */
-.card {
-    border: none;
-    border-radius: 8px;
+.notes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
 }
 
-.card-title {
-    font-size: 18px;
-}
-
-.card-body ul {
-    padding-left: 20px;
-    font-size: 14px;
-    color: #b3b3b3;
-}
-
-.card-body a {
-    color: #8ab4f8;
-    text-decoration: none;
+.note-card {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
 }
 
 #addNoteButton {
