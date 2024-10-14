@@ -213,11 +213,6 @@ class NoteCard extends HTMLElement {
                 <h5 class="card-title">${title}</h5>
                 <p class="card-body">${body}</p>
                 <p class="card-date"><small>${createdAt}</small></p>
-                <div class="card-icons">
-                    <i class="bi bi-pencil card-icon" title="Edit"></i>
-                    <i class="bi bi-archive card-icon" title="Arsipkan"></i>
-                    <i class="bi bi-trash card-icon" title="Hapus"></i>
-                </div>
             </div>
         `;
     }

@@ -6,6 +6,16 @@ html::-webkit-scrollbar {
     display: none;
 }
 
+:root {
+    --dracula-bg: #282a36;
+    --dracula-current-line: #44475a;
+    --dracula-foreground: #f8f8f2;
+    --dracula-comment: #6272a4;
+    --dracula-purple: #bd93f9;
+    --dracula-dark: #343a40;
+    --dracula-gray: #4e4d4c;
+}
+
 /* Adjust the navbar and search/dropdown styles */
 .navbar {
     height: 70px;
@@ -18,74 +28,57 @@ html::-webkit-scrollbar {
 /* Dropdown button */
 .navbar .dropdown-toggle {
     background-color: transparent;
-    border: 1px solid #555;
-    color: white;
+    border: 1px solid var(--dracula-comment);
+    color: var(--dracula-foreground);
 }
 
 #toggleSidebar {
     outline: none;
-    /* Hilangkan outline */
     box-shadow: none;
-    /* Hilangkan box-shadow */
     background-color: transparent;
-    /* Latarnya transparan */
-    color: white;
-    /* Warna teks (ikon) tombol */
+    color: var(--dracula-foreground);
     font-size: 24px;
-    /* Ukuran font yang lebih besar */
     padding: 10px;
 }
 
 #toggleSidebar:focus {
     outline: none;
-    /* Pastikan outline juga tidak muncul saat fokus */
     box-shadow: none;
-    /* Hilangkan box-shadow saat fokus */
 }
 
 #toggleSidebar:hover {
     background-color: transparent;
-    /* Latar belakang tetap transparan saat di-hover */
-    color: white;
-    /* Warna ikon tetap putih saat di-hover */
+    color: var(--dracula-foreground);
 }
 
 #toggleSidebar.btn-outline-light {
     border: none;
-    /* Hilangkan border outline pada tombol */
     background-color: transparent;
-    /* Atur latar belakang menjadi transparan */
 }
 
 .navbar .btn {
     display: flex;
-    /* Menggunakan flex untuk posisinya */
     align-items: center;
-    /* Vertically center */
     justify-content: center;
-    /* Horizontally center */
 }
 
 /* Horizontal line below navbar */
 .navbar-separator {
     border: 0;
     height: 1px;
-    background-color: #fff;
+    background-color: var(--dracula-foreground);
 }
 
 /* Sidebar Styles */
 .sidebar {
-    width: 80px;
-    transition: width 0.3s ease;
-    height: 100vh;
     position: fixed;
-    top: 56px;
-    /* Match the height of the navbar */
+    top: 50px;
+    bottom: 0;
     left: 0;
-    z-index: 1050;
-    /* Make sure sidebar is above the main content */
-    background-color: #343a40;
-    /* Adjust if needed */
+    width: 80px; /* Sesuaikan dengan desain */
+    background-color: var(--dracula-sidebar);
+    overflow-y: auto;
+    z-index: 5;
 }
 
 .sidebar.expanded {
@@ -95,7 +88,6 @@ html::-webkit-scrollbar {
 /* Hide text next to icons when collapsed */
 .sidebar:not(.expanded) .nav-link span {
     display: none;
-    /* Hide the text labels when collapsed */
 }
 
 /* Center icons when sidebar is collapsed */
@@ -105,31 +97,36 @@ html::-webkit-scrollbar {
 }
 
 .sidebar:not(.expanded) .nav-link:hover {
-    background-color: #4e4d4c;
+    background-color: var(--dracula-gray);
     border-radius: 50%;
-    /* Make the hover effect circular */
     width: 40px;
-    /* Make it round */
     height: 40px;
-    /* Make it round */
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 5px auto;
-    /* Center the circular icon */
 }
 
 #main-content {
-    padding-top: 5px;
-    /* Space for navbar */
+    max-width: 100%;
+    overflow-x: hidden;
     margin-left: 80px;
-    /* Sidebar collapsed width */
     transition: margin-left 0.3s ease;
+    padding-bottom: 20px; 
 }
 
 .sidebar.expanded~#main-content {
-    margin-left: 80px;
-    /* Main content remains in place */
+    margin-left: 280px;
+    max-width: calc(100vw - 240px);
+}
+
+.sidebar.expanded~#main-content .notes-grid {
+    grid-template-columns: repeat(3, minmax(250px, 1fr));
+    max-width: calc(100vw - 240px);
+}
+
+.sidebar.expanded~footer {
+    margin-left: 240px;
 }
 
 /* Nav-link and hover effects */
@@ -140,64 +137,107 @@ html::-webkit-scrollbar {
 }
 
 .nav-link.active {
-    background-color: #bd93f9;
+    background-color: var(--dracula-purple);
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     margin-bottom: 10px;
-    /* Active menu background color */
 }
 
 .sidebar:not(.expanded) .nav-link.active {
-    background-color: #bd93f9;
+    background-color: var(--dracula-purple);
     border-radius: 50%;
-    /* Make the active effect circular */
     width: 40px;
-    /* Make it round */
     height: 40px;
-    /* Make it round */
     display: flex;
     align-items: center;
     justify-content: center;
     margin: 5px auto;
-    /* Center the circular icon */
 }
 
 .nav-link:hover {
-    background-color: #4e4d4c;
+    background-color: var(--dracula-gray);
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     margin-bottom: 10px;
-    /* Hover color for non-active menu items */
 }
 
 .notes-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 16px;
+    transition: margin-left 0.3s ease;
+    overflow: hidden;
 }
 
 .note-card {
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
+    background-color: var(--dracula-current-line);
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 300px;
+    overflow: hidden;
+    word-wrap: break-word;
+}
+
+footer {
+    background-color: var(--dracula-purple);
+    padding: 1rem;
+    text-align: center;
+    color: var(--dracula-foreground);
+    margin-left: 0;
+    position: relative; 
+    z-index: 10;
+}
+
+.sidebar.expanded~footer {
+    margin-left: 0;
+}
+
+footer a {
+    position: relative;
+    display: inline-block;
+    transition: transform 0.3s ease;
+}
+
+footer a:hover {
+    transform: scale(1.1);
+}
+
+footer a::after {
+    content: attr(data-title);
+    position: absolute;
+    bottom: -1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    color: var(--dracula-foreground);
+    opacity: 0;
+    white-space: nowrap;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    font-size: 0.9rem;
+}
+
+footer a:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-5px);
 }
 
 #addNoteButton {
     position: fixed;
     bottom: 30px;
     right: 20px;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #bd93f9;
+    background-color: var(--dracula-purple);
     border: none;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
-    color: white;
+    color: var(--dracula-foreground);
     font-size: 24px;
     z-index: 1000;
     transition: background-color 0.3s ease;
@@ -205,20 +245,18 @@ html::-webkit-scrollbar {
 
 /* Hover effect for button */
 #addNoteButton:hover {
-    background-color: white;
-    color: #bd93f9;
+    background-color: var(--dracula-foreground);
+    color: var(--dracula-purple);
 }
 
 /* Show search bar and light/dark mode button on desktop */
-@media (min-width: 768px) {
+@media (max-width: 767px) {
     #navbarSearchForm {
-        display: flex !important;
-        /* Make sure it's flex to align properly in navbar */
+        display: none !important;
     }
 
     #toggleThemeDesktop {
-        display: block !important;
-        color: #bd93f9;
+        display: none !important;
     }
 
     #addNoteButton {
@@ -226,6 +264,31 @@ html::-webkit-scrollbar {
         height: 50px;
         font-size: 20px;
     }
+
+    #toggleSidebar {
+        display: none;
+    }
+
+    .navbar-brand img {
+        margin-left: 0;
+    }
+
+    .sidebar {
+        width: 80px !important;
+    }
+
+    .sidebar .nav-link span {
+        display: none;
+    }
+
+    .sidebar.expanded {
+        width: 0 !important;
+    }
+
+    footer {
+        padding: 0.5rem;
+    }
+    
 }
 
 /* Optional: adjust width of search bar on larger screens */

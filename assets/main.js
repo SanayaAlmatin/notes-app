@@ -21,6 +21,21 @@ document.getElementById('toggleSidebar').addEventListener('click', function () {
     }
 });
 
+// Function to close sidebar if screen width is less than 768px
+function handleResize() {
+    const sidebar = document.querySelector('.sidebar');
+    const isMobile = window.innerWidth < 768;
+
+    // Jika di mobile, hapus kelas expanded dari sidebar
+    if (isMobile) {
+        sidebar.classList.remove('expanded');
+    }
+}
+
+// Jalankan saat halaman di-load dan ketika ukuran layar berubah
+window.addEventListener('load', handleResize);
+window.addEventListener('resize', handleResize);
+
 document.addEventListener('DOMContentLoaded', () => {
     const notesContainer = document.getElementById('notes-container');
 
