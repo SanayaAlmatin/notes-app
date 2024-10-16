@@ -1,4 +1,3 @@
-// Data dummy yang akan diekspor
 export const notesData = [{
         id: 'notes-jT-jjsyz61J8XKiI',
         title: 'Welcome to Notes, Dimas!',
@@ -115,12 +114,10 @@ class NoteCard extends HTMLElement {
         });
     }
 
-    // Gunakan connectedCallback untuk merender konten setelah elemen terpasang ke DOM
     connectedCallback() {
         this.render();
     }
 
-    // Ini akan terpanggil ketika atribut berubah (optional, jika Anda mengizinkan perubahan)
     attributeChangedCallback(name, oldValue, newValue) {
         this.render();
     }
@@ -129,13 +126,12 @@ class NoteCard extends HTMLElement {
         return ['title', 'body', 'createdAt'];
     }
 
-    // Fungsi render untuk memuat ulang konten berdasarkan atribut yang di-set
     render() {
+        const id = this.getAttribute('id');
         const title = this.getAttribute('title') || 'No Title';
         const body = this.getAttribute('body') || 'No Content';
         const createdAt = this.getAttribute('createdAt') ? new Date(this.getAttribute('createdAt')).toLocaleDateString() : 'Unknown Date';
 
-        // Menyusun ulang konten shadow DOM
         this.shadowRoot.innerHTML = `
             <style>
                 .card {

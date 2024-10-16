@@ -16,7 +16,6 @@ html::-webkit-scrollbar {
     --dracula-gray: #4e4d4c;
 }
 
-/* Adjust the navbar and search/dropdown styles */
 .navbar {
     height: 70px;
     display: flex;
@@ -25,7 +24,6 @@ html::-webkit-scrollbar {
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Dropdown button */
 .navbar .dropdown-toggle {
     background-color: transparent;
     border: 1px solid var(--dracula-comment);
@@ -62,20 +60,18 @@ html::-webkit-scrollbar {
     justify-content: center;
 }
 
-/* Horizontal line below navbar */
 .navbar-separator {
     border: 0;
     height: 1px;
     background-color: var(--dracula-foreground);
 }
 
-/* Sidebar Styles */
 .sidebar {
     position: fixed;
     top: 50px;
     bottom: 0;
     left: 0;
-    width: 80px; /* Sesuaikan dengan desain */
+    width: 80px;
     background-color: var(--dracula-sidebar);
     overflow-y: auto;
     z-index: 5;
@@ -85,12 +81,10 @@ html::-webkit-scrollbar {
     width: 240px;
 }
 
-/* Hide text next to icons when collapsed */
 .sidebar:not(.expanded) .nav-link span {
     display: none;
 }
 
-/* Center icons when sidebar is collapsed */
 .sidebar:not(.expanded) .nav-link {
     text-align: center;
     padding: 12px 0;
@@ -112,7 +106,7 @@ html::-webkit-scrollbar {
     overflow-x: hidden;
     margin-left: 80px;
     transition: margin-left 0.3s ease;
-    padding-bottom: 20px; 
+    padding-bottom: 20px;
 }
 
 .sidebar.expanded~#main-content {
@@ -129,7 +123,6 @@ html::-webkit-scrollbar {
     margin-left: 240px;
 }
 
-/* Nav-link and hover effects */
 .nav-link {
     padding: 10px 16px;
     font-size: 16px;
@@ -188,7 +181,7 @@ footer {
     text-align: center;
     color: var(--dracula-foreground);
     margin-left: 0;
-    position: relative; 
+    position: relative;
     z-index: 10;
 }
 
@@ -243,13 +236,28 @@ footer a:hover::after {
     transition: background-color 0.3s ease;
 }
 
-/* Hover effect for button */
 #addNoteButton:hover {
     background-color: var(--dracula-foreground);
     color: var(--dracula-purple);
 }
 
-/* Show search bar and light/dark mode button on desktop */
+#loading-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+#loading-container[hidden] {
+    display: none;
+}
+
 @media (max-width: 767px) {
     #navbarSearchForm {
         display: none !important;
@@ -288,10 +296,8 @@ footer a:hover::after {
     footer {
         padding: 0.5rem;
     }
-    
 }
 
-/* Optional: adjust width of search bar on larger screens */
 @media (min-width: 1200px) {
     #navbarSearchForm input {
         width: 500px;
