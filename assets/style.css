@@ -1,3 +1,11 @@
+html,
+body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
 html {
     scrollbar-width: none;
 }
@@ -102,6 +110,7 @@ html::-webkit-scrollbar {
 }
 
 #main-content {
+    flex-grow: 1;
     max-width: 100%;
     overflow-x: hidden;
     margin-left: 80px;
@@ -181,6 +190,8 @@ footer {
     text-align: center;
     color: var(--dracula-foreground);
     margin-left: 0;
+    margin-top: auto;
+    /* Pastikan footer tetap berada di bagian bawah */
     position: relative;
     z-index: 10;
 }

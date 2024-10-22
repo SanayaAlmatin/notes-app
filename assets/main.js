@@ -1,7 +1,4 @@
 import './note-card.js';
-import {
-    notesData
-} from './note-card.js';
 import './empty-state.js';
 import './loading-spinner.js';
 
@@ -32,69 +29,98 @@ function handleResize() {
 window.addEventListener('load', handleResize);
 window.addEventListener('resize', handleResize);
 
-document.addEventListener('DOMContentLoaded', () => {
+// Fungsi untuk menampilkan notes dari API
+async function renderNotes() {
     const notesContainer = document.getElementById('notes-container');
+    notesContainer.innerHTML = ''; // Kosongkan kontainer
 
-    if (notesContainer) {
-        notesData.forEach(note => {
-            const noteElement = document.createElement('note-card');
-            noteElement.setAttribute('title', note.title);
-            noteElement.setAttribute('body', note.body);
-            noteElement.setAttribute('createdAt', note.createdAt);
-            notesContainer.appendChild(noteElement);
-        });
-    } else {
-        console.error('notes-container element not found');
-    }
-});
+    try {
+        const response = await fetch('https://notes-api.dicoding.dev/v2/notes');
+        const result = await response.json();
 
-function initializeDummyData() {
-    const storedNotes = JSON.parse(localStorage.getItem('notesData'));
+        if (result.data.length > 0) {
+            // Hapus elemen empty-state jika ada
+            const emptyStateElement = document.querySelector('empty-state');
+            if (emptyStateElement) {
+                emptyStateElement.remove();
+            }
 
-    if (!storedNotes || storedNotes.length === 0) {
-        localStorage.setItem('notesData', JSON.stringify(notesData));
-        console.log('Data dummy telah diinisialisasi dan disimpan ke Local Storage.');
+            // Tambahkan notes ke kontainer
+            result.data.forEach(note => {
+                const noteElement = document.createElement('note-card');
+                noteElement.setAttribute('id', note.id);
+                noteElement.setAttribute('title', note.title);
+                noteElement.setAttribute('body', note.body);
+                noteElement.setAttribute('createdAt', note.createdAt);
+                notesContainer.appendChild(noteElement);
+            });
+        } else {
+            // Jika tidak ada notes, tampilkan empty-state
+            if (!document.querySelector('empty-state')) {
+                const emptyStateElement = document.createElement('empty-state');
+                emptyStateElement.setAttribute('message', 'No notes available. Try adding one!');
+                notesContainer.appendChild(emptyStateElement);
+            }
+        }
+    } catch (error) {
+        console.error('Error fetching notes:', error);
+
+        // Tampilkan pesan error dalam empty-state
+        if (!document.querySelector('empty-state')) {
+            const errorStateElement = document.createElement('empty-state');
+            errorStateElement.setAttribute('message', 'Failed to load notes. Please try again later.');
+            notesContainer.appendChild(errorStateElement);
+        }
     }
 }
 
-function renderNotes() {
-    const notesContainer = document.getElementById('notes-container');
-    notesContainer.innerHTML = '';
-
-    const storedNotes = JSON.parse(localStorage.getItem('notesData')) || [];
-
-    storedNotes.forEach(note => {
-        const noteElement = document.createElement('note-card');
-        noteElement.setAttribute('title', note.title);
-        noteElement.setAttribute('body', note.body);
-        noteElement.setAttribute('createdAt', note.createdAt);
-
-        notesContainer.appendChild(noteElement);
-    });
-}
-
-function addNewNote() {
+// Fungsi untuk menambah note baru menggunakan API dengan validasi
+async function addNewNote() {
     const title = document.getElementById('note-title').value;
     const body = document.getElementById('note-body').value;
-    const createdAt = new Date().toISOString();
 
-    const newNote = {
-        id: `notes-${Math.random().toString(36).substr(2, 9)}`,
-        title: title,
-        body: body,
-        createdAt: createdAt,
-        archived: false
-    };
+    // Validasi input
+    if (!title || !body) {
+        alert('Title and body are required to create a new note.');
+        return;
+    }
 
-    const storedNotes = JSON.parse(localStorage.getItem('notesData')) || [];
-    storedNotes.push(newNote);
+    if (title.length > 50) {
+        alert('Title must not exceed 50 characters.');
+        return;
+    }
 
-    localStorage.setItem('notesData', JSON.stringify(storedNotes));
+    // Validasi bahwa body harus minimal dua kata
+    const wordCount = body.trim().split(/\s+/).length;
+    if (wordCount < 2) {
+        alert('Body must contain at least two words.');
+        return;
+    }
 
-    document.getElementById('note-title').value = '';
-    document.getElementById('note-body').value = '';
+    try {
+        const response = await fetch('https://notes-api.dicoding.dev/v2/notes', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                title: title,
+                body: body,
+            }),
+        });
 
-    renderNotes();
+        const result = await response.json();
+        if (result.status === 'success') {
+            console.log('Note created successfully:', result.data);
+            document.getElementById('note-title').value = '';
+            document.getElementById('note-body').value = '';
+            renderNotes(); // Refresh notes setelah berhasil menambah note
+        } else {
+            console.error('Failed to create note:', result.message);
+        }
+    } catch (error) {
+        console.error('Error creating note:', error);
+    }
 }
 
 document.getElementById('note-form').addEventListener('submit', function (e) {
@@ -102,47 +128,52 @@ document.getElementById('note-form').addEventListener('submit', function (e) {
     addNewNote();
 });
 
-window.onload = function () {
-    initializeDummyData();
-    renderNotes();
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-    const titleInput = document.getElementById('note-title');
-    const contentInput = document.getElementById('note-body');
+// Fungsi untuk memvalidasi form dan mengaktifkan tombol, sekaligus menampilkan pesan error
+function validateForm() {
+    const title = document.getElementById('note-title').value.trim();
+    const body = document.getElementById('note-body').value.trim();
     const submitButton = document.getElementById('submit-button');
+
     const titleFeedback = document.getElementById('title-feedback');
     const contentFeedback = document.getElementById('content-feedback');
 
-    function validateForm() {
-        const titleIsValid = titleInput.value.trim().length > 1;
-        const contentIsValid = contentInput.value.trim().split(/\s+/).length >= 2;
+    const wordCount = body.split(/\s+/).length;
 
-        if (titleIsValid) {
-            titleInput.classList.remove('is-invalid');
-            titleInput.classList.add('is-valid');
-            titleFeedback.style.display = 'none';
-        } else {
-            titleInput.classList.add('is-invalid');
-            titleFeedback.style.display = 'block';
-        }
-
-        if (contentIsValid) {
-            contentInput.classList.remove('is-invalid');
-            contentInput.classList.add('is-valid');
-            contentFeedback.style.display = 'none';
-        } else {
-            contentInput.classList.add('is-invalid');
-            contentFeedback.style.display = 'block';
-        }
-
-        submitButton.disabled = !(titleIsValid && contentIsValid);
+    // Validasi title
+    if (title.length > 1) {
+        titleFeedback.style.display = 'none';
+        document.getElementById('note-title').classList.remove('is-invalid');
+        document.getElementById('note-title').classList.add('is-valid');
+    } else {
+        titleFeedback.style.display = 'block';
+        document.getElementById('note-title').classList.add('is-invalid');
+        document.getElementById('note-title').classList.remove('is-valid');
     }
 
-    titleInput.addEventListener('input', validateForm);
-    contentInput.addEventListener('input', validateForm);
-});
+    // Validasi body (minimal 2 kata)
+    if (wordCount >= 2) {
+        contentFeedback.style.display = 'none';
+        document.getElementById('note-body').classList.remove('is-invalid');
+        document.getElementById('note-body').classList.add('is-valid');
+    } else {
+        contentFeedback.style.display = 'block';
+        document.getElementById('note-body').classList.add('is-invalid');
+        document.getElementById('note-body').classList.remove('is-valid');
+    }
 
+    // Aktifkan tombol submit jika kedua validasi terpenuhi
+    if (title.length > 1 && wordCount >= 2) {
+        submitButton.disabled = false;
+    } else {
+        submitButton.disabled = true;
+    }
+}
+
+// Tambahkan event listener untuk memantau perubahan input di field note-title dan note-body
+document.getElementById('note-title').addEventListener('input', validateForm);
+document.getElementById('note-body').addEventListener('input', validateForm);
+
+// Fungsi pencarian
 function filterNotesByKeyword(keyword) {
     const notes = document.querySelectorAll('note-card');
     let hasMatch = false;
@@ -166,12 +197,14 @@ function filterNotesByKeyword(keyword) {
     const emptyStateElement = document.querySelector('empty-state');
 
     if (!hasMatch) {
+        // Jika tidak ada kecocokan, tampilkan empty-state
         if (!emptyStateElement) {
             const newEmptyStateElement = document.createElement('empty-state');
-            newEmptyStateElement.setAttribute('message', 'No notes found. Try adding one!');
+            newEmptyStateElement.setAttribute('message', 'No notes found for your search.');
             notesContainer.appendChild(newEmptyStateElement);
         }
     } else {
+        // Jika ada kecocokan, sembunyikan/hapus empty-state
         if (emptyStateElement) {
             emptyStateElement.remove();
         }
@@ -199,6 +232,7 @@ function resetSearch() {
     const notesContainer = document.getElementById('notes-container');
     const emptyStateElement = document.querySelector('empty-state');
 
+    // Remove empty state when resetting the search
     if (emptyStateElement) {
         emptyStateElement.remove();
     }
@@ -232,20 +266,7 @@ document.addEventListener("DOMContentLoaded", () => {
     loadingContainer.hidden = false;
 
     setTimeout(() => {
-        loadNotes();
+        renderNotes();
         loadingContainer.hidden = true;
     }, 2000);
 });
-
-function loadNotes() {
-    const notes = JSON.parse(localStorage.getItem("notes")) || [];
-
-    if (notes.length === 0) {
-        const emptyState = document.querySelector("empty-state");
-        emptyState.removeAttribute("hidden");
-    } else {
-        const emptyState = document.querySelector("empty-state");
-        emptyState.setAttribute("hidden", "true");
-        renderNotes(notes);
-    }
-}
