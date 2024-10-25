@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pembuat Catatan</title>
+    <link
+      rel="shortcut icon"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/icons/journals.svg"
+      type="image/x-icon"
+    />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.4/css/all.css"
+      integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm"
+      crossorigin="anonymous"
+    />
+
+    <link rel="stylesheet" href="./styles/style.css" />
+  </head>
+
+  <body class="bg-dark">
+    <nav class="navbar navbar-dark bg-dark sticky-top">
+      <div class="container-fluid">
+        <div class="navbar-brand d-flex align-items-center">
+          <button id="toggleSidebar" class="btn btn-outline-light ms-2">
+            <i id="toggleIcon" class="bi bi-list"></i>
+          </button>
+          <i
+            class="bi bi-journals"
+            alt="Logo"
+            width="30"
+            height="30"
+            class="d-inline-block align-text-top"
+            style="margin-left: 25px; margin-right: 25px"
+          ></i>
+          <span class="d-sm-inline ms-2 fw-semibold"><i>Catatan</i></span>
+        </div>
+        <form id="navbarSearchForm" class="d-none d-md-flex">
+          <input
+            type="search"
+            class="form-control"
+            id="searchInput"
+            placeholder="Cari catatan..."
+            aria-label="Search"
+          />
+        </form>
+        <button
+          id="toggleThemeDesktop"
+          class="btn btn-outline-light d-none d-md-block ms-2"
+        >
+          <i class="bi bi-moon-stars"></i>
+        </button>
+      </div>
+    </nav>
+    <hr class="navbar-separator my-3" />
+
+    <div id="sidebar" class="sidebar bg-dark mt-5">
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link active text-light" href="#" id="all_notes">
+            <i class="bi bi-journals"></i><span class="ms-5">Catatan</span>
+          </a>
+        </li>
+        <li class="nav-item d-none d-md-block">
+          <a
+            class="nav-link text-light my-3"
+            href="#"
+            id="archive-sidebar-btn-desktop"
+          >
+            <i class="bi bi-archive"></i>
+            <span class="ms-5">Arsip Catatan</span>
+          </a>
+        </li>
+        <li class="nav-item d-md-none" id="mobileSearchForm">
+          <a
+            class="nav-link text-light"
+            href="#"
+            data-bs-toggle="modal"
+            data-bs-target="#searchModal"
+          >
+            <i class="bi bi-search"></i> <span class="ms-5">Pencarian</span>
+          </a>
+        </li>
+
+        <li class="nav-item d-md-none">
+          <a
+            class="nav-link text-light"
+            href="#"
+            id="mobileMenuToggle"
+            data-bs-toggle="collapse"
+            data-bs-target="#mobileDropdownMenu"
+            aria-expanded="false"
+          >
+            <i class="bi bi-grid"></i> <span class="ms-5">Menu Lainnya</span>
+          </a>
+          <div class="collapse" id="mobileDropdownMenu">
+            <ul class="nav flex-column">
+              <li class="nav-item">
+                <a
+                  class="nav-link text-light"
+                  href="#"
+                  id="archive-sidebar-btn-mobile"
+                >
+                  <i class="bi bi-archive"></i>
+                  <span class="ms-5">Arsip Catatan</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link text-light" href="#" id="toggleTheme">
+                  <i class="bi bi-moon-stars"></i>
+                  <span class="ms-5">Mode Gelap</span>
+                </a>
+              </li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <main id="main-content">
+      <div class="container">
+        <h2 class="text-light" id="page-title"><i>Semua Catatan</i></h2>
+      </div>
+      <div id="loading-container" hidden>
+        <loading-spinner></loading-spinner>
+      </div>
+      <div class="container notes-grid" id="notes-container"></div>
+      <div id="notes-container">
+        <empty-state></empty-state>
+      </div>
+      <div class="container notes-grid" id="archived-notes-container" hidden>
+        <div class="container notes-grid" id="archived-notes"></div>
+      </div>
+    </main>
+
+    <footer class="text-center mt-5">
+      <div class="container p-4 pb-0">
+        <section class="mb-4">
+          <a
+            class="btn text-white btn-floating m-1"
+            style="background-color: #ac2bac"
+            href="#!"
+            role="button"
+            data-title="Instagram"
+            ><i class="fab fa-instagram"></i
+          ></a>
+          <a
+            class="btn text-white btn-floating m-1"
+            style="background-color: #333333"
+            href="#!"
+            role="button"
+            data-title="GitHub"
+            ><i class="fab fa-github"></i
+          ></a>
+        </section>
+      </div>
+      <div
+        class="text-center p-3"
+        style="background-color: rgba(0, 0, 0, 0.05)"
+      >
+        © 2024 Copyright:
+        <p>Muchamad Sanaya Almatin (Id: F1837YB42)</p>
+      </div>
+    </footer>
+
+    <div
+      class="modal fade"
+      id="searchModal"
+      tabindex="-1"
+      aria-labelledby="searchModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content bg-dark text-light">
+          <div class="modal-header border-secondary">
+            <h5 class="modal-title" id="searchModalLabel">Search</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <input
+                type="search"
+                id="mobileSearchInput"
+                class="form-control bg-dark text-light"
+                placeholder="Type your keyword..."
+                aria-label="Search"
+              />
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="modal fade"
+      id="addNoteModal"
+      tabindex="-1"
+      aria-labelledby="addNoteModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addNoteModalLabel">Add a New Note</h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <input
+              type="text"
+              id="noteTitle"
+              class="form-control mb-3"
+              placeholder="Note Title"
+            />
+            <textarea
+              id="noteContent"
+              class="form-control"
+              rows="4"
+              placeholder="Note Content"
+            ></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="saveNoteButton">
+              Save Note
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <button
+      id="addNoteButton"
+      class="btn btn-primary rounded-circle"
+      data-bs-toggle="modal"
+      data-bs-target="#noteModal"
+    >
+      <i class="bi bi-bookmark-plus"></i>
+    </button>
+
+    <div
+      class="modal fade"
+      id="noteModal"
+      tabindex="-1"
+      aria-labelledby="noteModalLabel"
+      aria-hidden="true"
+    >
+      <div
+        class="modal-dialog modal-md modal-dialog-centered modal-dialog-scrollable"
+      >
+        <div class="modal-content bg-dark text-light">
+          <div class="modal-header border-secondary">
+            <h5 class="modal-title" id="noteModalLabel">Add New Note</h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form id="note-form">
+              <div class="mb-3">
+                <label for="note-title" class="form-label">Note Title</label>
+                <input
+                  type="text"
+                  class="form-control bg-dark text-light"
+                  id="note-title"
+                  placeholder="Enter note title"
+                  required
+                />
+                <div class="invalid-feedback" id="title-feedback">
+                  Title must be more than 1 character.
+                </div>
+              </div>
+              <div class="mb-3">
+                <label for="note-body" class="form-label">Note Content</label>
+                <textarea
+                  class="form-control bg-dark text-light"
+                  id="note-body"
+                  placeholder="Enter note content"
+                  rows="3"
+                  required
+                ></textarea>
+                <div class="invalid-feedback" id="content-feedback">
+                  Content must contain at least 2 words.
+                </div>
+              </div>
+              <button
+                type="submit"
+                class="btn btn-light"
+                id="submit-button"
+                disabled
+              >
+                Add Note
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div id="notes-container"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script
+      src="https://use.fontawesome.com/releases/v5.15.4/js/all.js"
+      integrity="sha384-rOA1PnstxnOBLzCLMcre8ybwbTmemjzdNlILg8O7z1lUkLXozs4DHonlDtnE7fpc"
+      crossorigin="anonymous"
+    ></script>
+
+    <script type="module" src="./index.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script type="module" src="./index.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </body>
+</html>

@@ -1,17 +1,17 @@
 class LoadingSpinner extends HTMLElement {
-    constructor() {
-        super();
-        this.attachShadow({
-            mode: 'open'
-        });
-    }
+  constructor() {
+    super();
+    this.attachShadow({
+      mode: "open",
+    });
+  }
 
-    connectedCallback() {
-        this.render();
-    }
+  connectedCallback() {
+    this.render();
+  }
 
-    render() {
-        this.shadowRoot.innerHTML = `
+  render() {
+    this.shadowRoot.innerHTML = `
             <style>
                 .spinner {
                     border: 4px solid rgba(255, 255, 255, 0.3);
@@ -34,15 +34,15 @@ class LoadingSpinner extends HTMLElement {
             </style>
             <div class="spinner"></div>
         `;
-    }
+  }
 
-    hide() {
-        this.shadowRoot.querySelector('.spinner').classList.add('hidden');
-    }
+  hide() {
+    this.shadowRoot.querySelector(".spinner").classList.add("hidden");
+  }
 
-    show() {
-        this.shadowRoot.querySelector('.spinner').classList.remove('hidden');
-    }
+  show() {
+    this.shadowRoot.querySelector(".spinner").classList.remove("hidden");
+  }
 }
 
-customElements.define('loading-spinner', LoadingSpinner);
+customElements.define("loading-spinner", LoadingSpinner);
